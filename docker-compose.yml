@@ -1,0 +1,19 @@
+services:
+  front:
+    working_dir: /app
+    build:
+      context: .
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: development
+    command: npm run dev
+    networks:
+      - app-network
+  networks:
+    app-network:
+      external: true
+
