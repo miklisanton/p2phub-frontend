@@ -13,7 +13,7 @@ services:
     command: npm run dev
     networks:
       - app-network
-  networks:
-    app-network:
-      external: true
+networks:
+  app-network:
+    external: true
 
