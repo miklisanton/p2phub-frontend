@@ -2,10 +2,15 @@
 
 import { useRouter } from 'next/navigation';
 import { LoginRequest} from '@/types';
+import { useAppSelector } from '@/lib/hooks';
 import { fetchCsrf } from '@/utils';
 
 export const Login = () => {
   const router = useRouter();
+  const user = useAppSelector((state) => state.user.user);
+  if (user) {
+    router.push('/trackers');
+  }
 
   const handleSubmit = (e:React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +33,6 @@ export const Login = () => {
   }
 
   return (
-    <div className="flex-grow flex">
       <form onSubmit={handleSubmit}
         className="self-center container grid justify-center grid bg-gray-300 mx-auto w-2/3 md:w-1/3 p-5 rounded-lg shadow-lg transition-all max-w-md">
         <label className="text-gray-700 font-bold mt-2" htmlFor="email">Email:</label>
@@ -55,6 +59,5 @@ export const Login = () => {
           </button>
         </div>
     </form>
-    </div>
   );
 }

@@ -19,7 +19,7 @@ export const Profile = () => {
   const user = useAppSelector((state) => state.user.user)
   const loading = useAppSelector((state) => state.user.loading) 
   const error = useAppSelector((state) => state.user.error)
-  if (loading) {
+  if (loading || user===null) {
     return (
       <LoadingPage />
     )
@@ -31,9 +31,6 @@ export const Profile = () => {
       <h1 className="capitalize text-5xl font-semibold md:text-center ml-4 md:ml-0  mb-2 text-orange-800">Not logged in</h1>
     </div>
     )
-  }
-  if (user === null) {
-    return null
   }
   
   return (

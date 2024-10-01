@@ -26,10 +26,10 @@ export default function Hero() {
   }
   return (
         <section className="bg-cover bg-center h-[100vh] md:h-[50vh] min-h-64" >
-          <div className="h-full flex flex-col justify-center items-center text-center text-white bg-black">
+          <div className="h-full flex flex-col justify-center items-center text-center text-gray-100 bg-gray-900">
             <h1 className="text-4xl font-bold mb-4">Start monitoring your P2P ads</h1>
             <p className="text-xl mb-6">
-      Create a tracker to receive notifications when your advertisement is no longer at the top(Binance/Bybit supported)</p>
+      Create a tracker to receive notifications when your advertisement is no longer at the top (Binance/Bybit supported)</p>
             <HeroButton />
           </div>
         </section>
