@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 axios.defaults.withCredentials = true;
 
 export const publicFetch = axios.create({
-  baseURL: 'https://p2phub.top/api/v1/public',
+  baseURL: 'https://p2phub.top:8443/api/v1/public',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -12,7 +12,7 @@ export const publicFetch = axios.create({
 });
 
 export const privateFetch = axios.create({
-  baseURL: 'https://p2phub.top/api/v1/private',
+  baseURL: 'https://p2phub.top:8443/api/v1/private',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
