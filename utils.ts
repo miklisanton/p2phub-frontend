@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND;
+
 axios.defaults.withCredentials = true;
 
 export const publicFetch = axios.create({
-  baseURL: 'https://p2phub.top:8443/api/v1/public',
+  baseURL: backendUrl + '/api/v1/public',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -12,7 +14,7 @@ export const publicFetch = axios.create({
 });
 
 export const privateFetch = axios.create({
-  baseURL: 'https://p2phub.top:8443/api/v1/private',
+  baseURL: backendUrl + '/api/v1/private',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
