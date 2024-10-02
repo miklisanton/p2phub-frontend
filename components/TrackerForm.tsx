@@ -4,7 +4,7 @@ import { Bars } from 'react-loader-spinner';
 import {privateFetch, displayErrors} from '../utils';
 import { toast } from 'react-toastify';
 import { useEffect, useState, useRef} from 'react';
-import { APIError } from '@/types';
+import { APIError, FormPMeth} from '@/types';
 import { useCreateTrackerMutation } from '@/lib/features/trackers/trackersApi';
 
 const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
@@ -38,7 +38,7 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
   };
   // Retreive form options
   // Get exchanges on page load
-  const [exchanges, setExchanges] = useState([]);
+  const [exchanges, setExchanges] = useState<string[]>([]);
   const [exchange, setExchange] = useState('');
   useEffect(() => {
     privateFetch.get('/trackers/options/exchanges').then((response) => {
@@ -50,7 +50,7 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
     );
   }, []);
   // Get currencies when exchange input changes 
-  const [currencies, setCurrencies] = useState([]);
+  const [currencies, setCurrencies] = useState<string[]>([]);
   const [currency, setCurrency] = useState('');
   useEffect(() => {
     if (exchange !== '') {
@@ -68,7 +68,7 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
     setCurrency('');
   }, [exchange]);
   // Get payment methods when currency input changes 
-  const [payMethods, setPayMethods] = useState([]);
+  const [payMethods, setPayMethods] = useState<FormPMeth[]>([]);
   useEffect(() => {
     if (currency !== '' && exchange !== '') {
       privateFetch.get('/trackers/options/methods?exchange='+exchange+'&currency='+currency).then((response) => {
@@ -82,7 +82,7 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
     // Reset selected methods when currency changes
     setSelectedMethods([]);
   }, [currency, exchange]);
-  const [selectedMethods, setSelectedMethods] = useState([]);
+  const [selectedMethods, setSelectedMethods] = useState<FormPMeth[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,16 +93,16 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
     const username = formData.get('username') as string;
     const currency = formData.get('currency') as string;
     const notify = notifications;
-    const payment_methods = selectedMethods;
+    const payment_methods = selectedMethods.map((method) => method.id);
     const is_aggregated = payment_methods.length > 0 ? false : false;
     createTracker({exchange, side, username, currency, notify, payment_methods, is_aggregated});
   }
 
   return (
     <>
-       <form onSubmit={handleSubmit} id="TrackerForm" className="bg-gray-300 p-5 grid gap-4 w-full rounded-lg shadow-lg transition-all">
+       <form onSubmit={handleSubmit} id="TrackerForm" className="bg-gray-300 md:p-5 p-3 grid w-full rounded-lg shadow-lg transition-all">
         {/* Exchange and Direction */}
-        <div className="w-full flex justify-between items-center mb-4">
+        <div className="pb-4 w-full flex justify-between items-center">
           {/* Exchange */}
           <div className="w-1/2 pr-2">
             <label htmlFor="exchange" className="text-gray-700 font-bold">Exchange</label>
@@ -137,14 +137,14 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
         </div>
 
         {/* Exchange username, currency inputs */}
-        <div className="w-full flex justify-between items-center mb-4">
+        <div className="w-full flex-wrap flex justify-between items-center mb-4">
           {/* Payment methods */}
-          <div className="max-w-32">
+          <div className="pb-4 md:pb-0 md:max-w-32 w-full lg:max-w-36">
             <label htmlFor="payment" className="text-gray-700 font-bold">Payment</label>
             <MultiSelect options={payMethods} selected={selectedMethods} setSelected={setSelectedMethods}/>
           </div>
           {/* Currency */}
-          <div className="max-w-24">
+          <div className="md:max-w-22 lg:max-w-24">
             <label htmlFor="currency" className="text-gray-700 font-bold">Currency</label>
             <select
               id="currency"
@@ -161,7 +161,7 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
             </select>
           </div>
           {/* Exchange username */}
-          <div className="max-w-28">
+          <div className="max-w-36 md:max-w-20 lg:max-w-28">
             <label htmlFor="username" className="text-gray-700 font-bold">Username</label>
             <input
               type="text"

@@ -1,22 +1,27 @@
 import React, {useState, useRef, useEffect} from 'react';
-export const MultiSelect = ({options, selected, setSelected}) => {
+import { FormPMeth} from '@/types';
+export const MultiSelect = (
+    {options, selected, setSelected} :
+    {options: FormPMeth[],
+    selected: FormPMeth[],
+    setSelected: React.Dispatch<React.SetStateAction<FormPMeth[]>>}) => {
   const [isOpen, setIsOpen] = useState(false);
   // toggle dropdown
   const toggle = () => setIsOpen(!isOpen);
-  const optionsDiv = useRef(null);
+  const optionsDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-  const handleClickOutside = (event) => {
-    if (optionsDiv.current && !optionsDiv.current.contains(event.target)) {
+  const handleClickOutside = (event: MouseEvent ) => {
+    if (optionsDiv.current && !optionsDiv.current.contains(event.target as Node)) {
       setIsOpen(false);
     }
   }
   // handle selection
-  const handleSelect = (option) => {
+  const handleSelect = (option: FormPMeth) => {
     if (selected.includes(option)) {
       setSelected(selected.filter((item) => item !== option));
     } else {
@@ -25,13 +30,13 @@ export const MultiSelect = ({options, selected, setSelected}) => {
   }
 
   return (
-    <div className="relative w-36" ref={optionsDiv}>
+    <div className="relative w-full" ref={optionsDiv}>
       <div
         className="bg-gray-200 block rounded-lg mt-2 px-4 py-1.5 cursor-pointer shadow-sm focus:outline-none focus:ring focus:border-blue-500 overflow-hidden"
         onClick={toggle}
       >
         <span className="text-gray-700">
-          {selected.length > 0 ? selected[0]  : 'Auto'}
+          {selected.length > 0 ? selected[0].name  : 'Auto'}
         </span>
       <div className="flex absolute bg-gray-200 px-1.5 h-full right-0 top-0 align-center rounded-r-lg">
         <span className="m-auto float-right text-gray-700">
@@ -41,7 +46,7 @@ export const MultiSelect = ({options, selected, setSelected}) => {
       </div>
       {isOpen && (
         <div  
-        className="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10">
+        className="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10 break-words">
           {options.map((option) => (
             <label
               key={option.id}
@@ -50,8 +55,8 @@ export const MultiSelect = ({options, selected, setSelected}) => {
               <input
                 type="checkbox"
                 className="mr-2"
-                checked={selected.includes(option.id)}
-                onChange={() => handleSelect(option.id)}
+                checked={selected.includes(option)}
+                onChange={() => handleSelect(option)}
               />
               {option.name || option.id}
             </label>

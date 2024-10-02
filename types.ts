@@ -26,6 +26,11 @@ export const MethodSchema = z.object({
   Name: z.string(),
 });
 
+export const FormPMethSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
 export const TrackerSchema = z.object({
   id: z.number(),
   exchange: z.string(),
@@ -51,6 +56,7 @@ export type BaseResponse = z.infer<typeof BaseResponseSchema>;
 export type Method = z.infer<typeof MethodSchema>;
 export type Tracker = z.infer<typeof TrackerSchema>;
 export type TrackerList = z.infer<typeof TrackerListSchema>;
+export type FormPMeth = z.infer<typeof FormPMethSchema>;
 
 export type TrackerPost = {
   exchange: string,
