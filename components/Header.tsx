@@ -1,11 +1,10 @@
 'use client'
 
-import { useAppSelector, useAppDispatch, useAppStore } from '@/lib/hooks'
+import { useAppSelector } from '@/lib/hooks'
 import { NavLink } from './Navlink'
 import { useState } from 'react'
 import { links } from '../data'
-import { publicFetch, privateFetch, fetchCsrf} from '../utils'
-import { type User } from '../types'
+import { privateFetch } from '../utils'
 import {
   Dialog,
   DialogPanel,
@@ -20,7 +19,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const Profile = () => {
-    const {user, loading} = useAppSelector((state) => state.user)
+    const {user} = useAppSelector((state) => state.user)
     if (user !== null) {
       return (
         <>

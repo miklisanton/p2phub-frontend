@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { LoginRequest} from '@/types';
 import { useAppSelector } from '@/lib/hooks';
-import { fetchCsrf } from '@/utils';
 
 export const Login = () => {
   const router = useRouter();

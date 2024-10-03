@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { type FormPMeth } from "@/types";
-import { trackersApi } from "./trackersApi";
 
 const initialState = {
   exchange: "binance",

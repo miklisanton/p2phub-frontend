@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
-import  { Roboto, Roboto_Condensed } from "next/font/google";
+import  { Roboto} from "next/font/google";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import "./globals.css";
 import Provider from './StoreProvider';
-import { useAppDispatch, useAppSelector} from "@/lib/hooks";
-import {fetchUserThunk} from "@/lib/features/user/userSlice";
 import ToastProvider from './ToastProvider';
-import { fetchCsrf } from "@/utils";
 
 const roboto = Roboto({
   subsets: ['latin'],

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {type User, type ErrorResponse, type BaseResponse, fetchUser, LoginRequest} from '../../../types'
+import {type User, type ErrorResponse, fetchUser} from '../../../types'
 
 export const fetchUserThunk = createAsyncThunk(
   "user/fetchUser",

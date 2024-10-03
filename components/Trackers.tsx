@@ -1,12 +1,8 @@
 'use client';
 import Tracker from './SingleTracker';
 import TrackerForm from './TrackerForm';
-import {useMutation, useQueryClient, useQuery, keepPreviousData} from '@tanstack/react-query';
 import { useAppSelector } from '../lib/hooks';
-import {privateFetch} from '../utils';
-import { Bars } from 'react-loader-spinner';
 import React from 'react';
-import { FetchTrackers } from '@/types';
 import { useGetTrackersQuery } from '@/lib/features/trackers/trackersApi';
 import LoadingPage from './Loading';
 
@@ -15,7 +11,7 @@ export  function Trackers() {
   // Check if telegram is connected
   const isTelegramConnecected = user?.user.telegram ? true : false;
   const [page, setPage] = React.useState(1);
-  const { data, isLoading, isError, isSuccess} = useGetTrackersQuery(page);
+  const { data, isLoading, isError } = useGetTrackersQuery(page);
   if (isLoading) {
     return ( 
         <LoadingPage />

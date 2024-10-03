@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:alpine
 
 WORKDIR /app
 
@@ -10,4 +10,4 @@ COPY next.config.mjs ./next.config.mjs
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"
+CMD ["npm", "run", "dev"]

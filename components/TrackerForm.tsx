@@ -1,13 +1,11 @@
 'use client';
 import {MultiSelect} from './MultiSelect';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
 import { Bars } from 'react-loader-spinner';
-import {privateFetch, displayErrors} from '../utils';
 import { toast } from 'react-toastify';
 import { useEffect, useState, useRef} from 'react';
-import { APIError, FormPMeth} from '@/types';
+import { APIError } from '@/types';
 import { useCreateTrackerMutation, useFetchExchangesQuery, useFetchCurrenciesQuery, useFetchMethodsQuery } from '@/lib/features/trackers/trackersApi';
-import { useAppSelector, useAppDispatch, useAppStore } from '@/lib/hooks';
+import { useAppSelector, useAppDispatch } from '@/lib/hooks';
 import { setExchange, setCurrency} from '@/lib/features/trackers/formSlice';   
 
 
@@ -98,8 +96,8 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
                 id="side"
                 name="side"
                 className="block w-full bg-gray-200 text-gray-700 px-4 py-2 mt-2 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500">
-                <option key="BUY" value="SELL">I'm selling</option>
-                <option key="SELL" value="BUY">I'm buying</option>
+                <option key="BUY" value="SELL">I&apos;m selling</option>
+                <option key="SELL" value="BUY">I&apos;m buying</option>
               </select>
             </div>
           </div>
@@ -107,13 +105,13 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
         {/* Exchange username, currency inputs */}
         <div className="w-full flex-wrap flex justify-between items-center mb-4">
           {/* Payment methods */}
-          {isMethodsLoading 
+          {isMethodsLoading || !availableMethods?.options
             ?
               <div>Loading...</div>
             :
               <div className="pb-4 md:pb-0 md:max-w-32 w-full lg:max-w-36">
                 <label htmlFor="payment" className="text-gray-700 font-bold">Payment</label>
-                  <MultiSelect options={availableMethods?.options!}/>
+                  <MultiSelect options={availableMethods?.options}/>
               </div>
           }
           {/* Currency */}

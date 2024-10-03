@@ -1,15 +1,19 @@
 import { createApi, BaseQueryFn } from "@reduxjs/toolkit/query/react";
-import axios, {Method} from "axios";
+import axios from "axios";
 import { privateFetch } from "@/utils";
 
 import { type TrackerList, type FormPMeth, TrackerPost, Tracker, ErrorSchema} from "@/types";
 
 export const customBaseQuery: BaseQueryFn<
-  {url: string, method: "get"|"post"|"delete"|"patch", body?: any},
+  {url: string, method: "get"|"post"|"delete"|"patch", body?: null | TrackerPost | {notify: boolean}},
   unknown,
   unknown
   > = async ({ url, method, body }) => {
     try {
+      if (body === null) {
+        const response = await privateFetch[method](url);
+        return {data: response.data};
+      }
       const response = await privateFetch[method](url, body);
       return {data: response.data};
     } catch (error) {

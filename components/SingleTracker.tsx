@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react';
-import { privateFetch } from '../utils';
 import { TrashIcon } from '@heroicons/react/20/solid';
 import { useUpdateTrackerMutation, useDeleteTrackerMutation } from '@/lib/features/trackers/trackersApi';
 import { Method, Tracker as TrackerClass } from '@/types';
@@ -41,25 +40,8 @@ const PaymentMethodsList = ({methods}: {methods: Method[]}) => {
 };
 
 const Tracker = ({ tracker, isTelegramConnected} : {tracker: TrackerClass, isTelegramConnected: boolean}) => {
- // const queryClient = useQueryClient();
- // const { mutate:deleteTracker } = useMutation({
- //     mutationFn: () => {
- //       return privateFetch.delete(`/trackers/${tracker.id}`)
- //     },
- //     onSuccess: () => {
- //       queryClient.invalidateQueries(['trackers']);
- //     }
- // });
- // const { mutate:updateTracker } = useMutation({
- //     mutationFn: () => {
- //       return privateFetch.patch(`/trackers/${tracker.id}`, {notify: notifications})
- //     },
- //     onSuccess: () => {
- //       queryClient.invalidateQueries(['trackers']);
- //     }
- // });
-  const [updateTracker, result] = useUpdateTrackerMutation();
-  const [deleteTracker, deleteResult] = useDeleteTrackerMutation();
+  const [updateTracker] = useUpdateTrackerMutation();
+  const [deleteTracker] = useDeleteTrackerMutation();
 
   const [notifications, setNotifications] = useState(tracker.notify);
 
