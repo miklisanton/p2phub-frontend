@@ -1,10 +1,9 @@
 import React, {useState, useRef, useEffect} from 'react';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { setMethods } from '@/lib/features/trackers/formSlice';
+
 import { FormPMeth} from '@/types';
-export const MultiSelect = (
-    {options, selected, setSelected} :
-    {options: FormPMeth[],
-    selected: FormPMeth[],
-    setSelected: React.Dispatch<React.SetStateAction<FormPMeth[]>>}) => {
+export const MultiSelect = ({options}: {options: FormPMeth[]}) => {
   const [isOpen, setIsOpen] = useState(false);
   // toggle dropdown
   const toggle = () => setIsOpen(!isOpen);
@@ -21,11 +20,13 @@ export const MultiSelect = (
     }
   }
   // handle selection
+  const dispatch = useAppDispatch();
+  const { methods } = useAppSelector((state) => state.form);
   const handleSelect = (option: FormPMeth) => {
-    if (selected.includes(option)) {
-      setSelected(selected.filter((item) => item !== option));
+    if (methods.includes(option)) {
+      dispatch(setMethods(methods.filter((item) => item !== option)));
     } else {
-      setSelected([...selected, option]);
+      dispatch(setMethods([...methods, option]));
     }
   }
 
@@ -36,7 +37,7 @@ export const MultiSelect = (
         onClick={toggle}
       >
         <span className="text-gray-700">
-          {selected.length > 0 ? selected[0].name  : 'Auto'}
+          {methods.length > 0 ? methods[0].name  : 'Auto'}
         </span>
       <div className="flex absolute bg-gray-200 px-1.5 h-full right-0 top-0 align-center rounded-r-lg">
         <span className="m-auto float-right text-gray-700">
@@ -55,7 +56,7 @@ export const MultiSelect = (
               <input
                 type="checkbox"
                 className="mr-2"
-                checked={selected.includes(option)}
+                checked={methods.includes(option)}
                 onChange={() => handleSelect(option)}
               />
               {option.name || option.id}

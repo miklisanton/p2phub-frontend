@@ -2,6 +2,7 @@ import {z} from 'zod';
 import axios from 'axios';
 import { privateFetch, publicFetch} from './utils';
 import {toast} from 'react-toastify';
+import { BaseQueryFn } from '@reduxjs/toolkit/query';
 
 export const BaseResponseSchema = z.object({
   message: z.string(),
@@ -185,3 +186,4 @@ export const FetchTrackers = async (page:number): Promise<Result<BaseResponse>> 
     }
   }
 }
+

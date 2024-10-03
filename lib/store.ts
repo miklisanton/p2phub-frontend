@@ -1,8 +1,9 @@
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import userReducer, {userSlice}  from './features/user/userSlice'
 import { trackersApi } from './features/trackers/trackersApi'
+import formReducer, { formSlice }  from './features/trackers/formSlice'
 
-const rootReducer = combineSlices(userSlice, trackersApi)
+const rootReducer = combineSlices(userSlice, trackersApi, formSlice)
 
 export const makeStore = () =>{
   return configureStore({

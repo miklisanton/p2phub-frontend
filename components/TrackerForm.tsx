@@ -1,3 +1,4 @@
+'use client';
 import {MultiSelect} from './MultiSelect';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import { Bars } from 'react-loader-spinner';
@@ -5,7 +6,10 @@ import {privateFetch, displayErrors} from '../utils';
 import { toast } from 'react-toastify';
 import { useEffect, useState, useRef} from 'react';
 import { APIError, FormPMeth} from '@/types';
-import { useCreateTrackerMutation } from '@/lib/features/trackers/trackersApi';
+import { useCreateTrackerMutation, useFetchExchangesQuery, useFetchCurrenciesQuery, useFetchMethodsQuery } from '@/lib/features/trackers/trackersApi';
+import { useAppSelector, useAppDispatch, useAppStore } from '@/lib/hooks';
+import { setExchange, setCurrency} from '@/lib/features/trackers/formSlice';   
+
 
 const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
   // Disable notifications toggle if telegram is not connected
@@ -20,70 +24,27 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
   const [createTracker, result] = useCreateTrackerMutation()
   useEffect(() => {
     if (result.isSuccess) {
-      toast.success('Tracker added successfully');
+      toast.success(`Added ${result.data.trackers.length} trackers`);
     }
     if (result.isError) {
-      console.log(result.error);
       if (typeof result.error === 'object' && result.error !== null && 'errors' in result.error) {
         const error = new APIError("", result.error.errors);
         error.displayErrors();
       }
     }   
   }, [result]);
-  console.log(result);
   
   const [notifications, setNotifications] = useState(true);
   const handleNotificationToggle = () => {
     setNotifications(!notifications);
   };
-  // Retreive form options
-  // Get exchanges on page load
-  const [exchanges, setExchanges] = useState<string[]>([]);
-  const [exchange, setExchange] = useState('');
-  useEffect(() => {
-    privateFetch.get('/trackers/options/exchanges').then((response) => {
-      setExchanges(response.data.exchanges);
-      setExchange(response.data.exchanges[0]);
-    }).catch((error) => {
-      console.error('Error fetching exchanges', error);
-    }
-    );
-  }, []);
-  // Get currencies when exchange input changes 
-  const [currencies, setCurrencies] = useState<string[]>([]);
-  const [currency, setCurrency] = useState('');
-  useEffect(() => {
-    if (exchange !== '') {
-      privateFetch.get('/trackers/options/currencies?exchange='+exchange).then((response) => {
-        setCurrencies(response.data.options);
-        setCurrency(response.data.options[0]);
-      }).catch((error) => {
-        console.error('Error fetching currencies', error.response.data);
-      }
-      );
-    }
-    //Reset selected methods when exchange changes
-    setSelectedMethods([]);
-    //Reset selected currency when exchange changes
-    setCurrency('');
-  }, [exchange]);
-  // Get payment methods when currency input changes 
-  const [payMethods, setPayMethods] = useState<FormPMeth[]>([]);
-  useEffect(() => {
-    if (currency !== '' && exchange !== '') {
-      privateFetch.get('/trackers/options/methods?exchange='+exchange+'&currency='+currency).then((response) => {
-        setPayMethods(response.data.options);
-        console.log(response.data.options);
-      }).catch((error) => {
-        console.error('Error fetching payment methods', error.response.data);
-      }
-      );
-    }
-    // Reset selected methods when currency changes
-    setSelectedMethods([]);
-  }, [currency, exchange]);
-  const [selectedMethods, setSelectedMethods] = useState<FormPMeth[]>([]);
 
+  const dispatch = useAppDispatch();
+  const { exchange, currency, methods} = useAppSelector((state) => state.form);
+  const {data: availableExchanges, isLoading:isExchangeLoading} = useFetchExchangesQuery();
+  const {data: availableCurrencies, isLoading:isCurrenciesLoading} = useFetchCurrenciesQuery(exchange);
+  const {data: availableMethods, isLoading:isMethodsLoading} = useFetchMethodsQuery([exchange, currency]);
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
@@ -93,7 +54,7 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
     const username = formData.get('username') as string;
     const currency = formData.get('currency') as string;
     const notify = notifications;
-    const payment_methods = selectedMethods.map((method) => method.id);
+    const payment_methods = methods.map((method) => method.id);
     const is_aggregated = payment_methods.length > 0 ? false : false;
     createTracker({exchange, side, username, currency, notify, payment_methods, is_aggregated});
   }
@@ -104,62 +65,82 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
         {/* Exchange and Direction */}
         <div className="pb-4 w-full flex justify-between items-center">
           {/* Exchange */}
-          <div className="w-1/2 pr-2">
-            <label htmlFor="exchange" className="text-gray-700 font-bold">Exchange</label>
-            <select
-              id="exchange"
-              name="exchange"
-              onChange={(e) => {setExchange(e.target.value)}}
-              className="block w-full bg-gray-200 text-gray-700 px-4 py-2 mt-2 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500"
-            >
-              {exchanges.map((exchange) => {
-                return (
-                  <option key={exchange} value={exchange} className="text-gray-800 bg-white">
-                    {exchange}
-                  </option>
-                )
-              })
+          {isExchangeLoading
+            ?
+              <div>Loading...</div>
+            :
+            <div className="w-1/2 pr-2">
+              <label htmlFor="exchange" className="text-gray-700 font-bold">Exchange</label>
+              <select
+                id="exchange"
+                name="exchange"
+                value={exchange}
+                onChange={(e) => {dispatch(setExchange(e.target.value))}}
+                className="block w-full bg-gray-200 text-gray-700 px-4 py-2 mt-2 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500"
+              >
+              {
+                availableExchanges?.exchanges.map((exchange) => {
+                  return (
+                    <option key={exchange} value={exchange} className="text-gray-800 bg-white">
+                      {exchange}
+                    </option>
+                  )
+                })
               }
-            </select>
-          </div>
+              </select>
+            </div>
+          }
 
-          {/* Direction */}
-          <div className="w-1/2 pl-2">
-            <label htmlFor="direction" className="text-gray-700 font-bold">Direction</label>
-            <select
-              id="side"
-              name="side"
-              className="block w-full bg-gray-200 text-gray-700 px-4 py-2 mt-2 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500">
-              <option key="BUY" value="SELL">I'm selling</option>
-              <option key="SELL" value="BUY">I'm buying</option>
-            </select>
+            {/* Direction */}
+            <div className="w-1/2 pl-2">
+              <label htmlFor="direction" className="text-gray-700 font-bold">Direction</label>
+              <select
+                id="side"
+                name="side"
+                className="block w-full bg-gray-200 text-gray-700 px-4 py-2 mt-2 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500">
+                <option key="BUY" value="SELL">I'm selling</option>
+                <option key="SELL" value="BUY">I'm buying</option>
+              </select>
+            </div>
           </div>
-        </div>
 
         {/* Exchange username, currency inputs */}
         <div className="w-full flex-wrap flex justify-between items-center mb-4">
           {/* Payment methods */}
-          <div className="pb-4 md:pb-0 md:max-w-32 w-full lg:max-w-36">
-            <label htmlFor="payment" className="text-gray-700 font-bold">Payment</label>
-            <MultiSelect options={payMethods} selected={selectedMethods} setSelected={setSelectedMethods}/>
-          </div>
+          {isMethodsLoading 
+            ?
+              <div>Loading...</div>
+            :
+              <div className="pb-4 md:pb-0 md:max-w-32 w-full lg:max-w-36">
+                <label htmlFor="payment" className="text-gray-700 font-bold">Payment</label>
+                  <MultiSelect options={availableMethods?.options!}/>
+              </div>
+          }
           {/* Currency */}
-          <div className="md:max-w-22 lg:max-w-24">
-            <label htmlFor="currency" className="text-gray-700 font-bold">Currency</label>
-            <select
-              id="currency"
-              name="currency"
-              onChange={(e) => {setCurrency(e.target.value)}}
-              className="block w-full bg-gray-200 text-gray-700 px-4 py-2 mt-2 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500">
-            {currencies.map((currency) => {
-                return (
-                  <option key={currency} value={currency} className="text-gray-800 bg-white">
-                    {currency}
-                  </option>
-                )
-            })}
-            </select>
-          </div>
+          {isCurrenciesLoading
+            ?
+              <div>Loading...</div>
+            :
+              <div className="md:max-w-22 lg:max-w-24">
+                <label htmlFor="currency" className="text-gray-700 font-bold">Currency</label>
+                <select
+                  id="currency"
+                  name="currency"
+                  value={currency}
+                  onChange={(e) => {dispatch(setCurrency(e.target.value))}}
+                  className="block w-full bg-gray-200 text-gray-700 px-4 py-2 mt-2 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500">
+                  {
+                    availableCurrencies?.options!.map((currency) => {
+                      return (
+                        <option key={currency} value={currency} className="text-gray-800 bg-white">
+                          {currency}
+                        </option>
+                      )
+                    })
+                  }
+                </select>
+              </div>
+          }
           {/* Exchange username */}
           <div className="max-w-36 md:max-w-20 lg:max-w-28">
             <label htmlFor="username" className="text-gray-700 font-bold">Username</label>

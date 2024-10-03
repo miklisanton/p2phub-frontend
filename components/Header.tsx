@@ -20,7 +20,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const Profile = () => {
-    const user = useAppSelector((state) => state.user.user)
+    const {user, loading} = useAppSelector((state) => state.user)
     if (user !== null) {
       return (
         <>

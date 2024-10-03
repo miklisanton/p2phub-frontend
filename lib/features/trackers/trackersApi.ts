@@ -2,9 +2,9 @@ import { createApi, BaseQueryFn } from "@reduxjs/toolkit/query/react";
 import axios, {Method} from "axios";
 import { privateFetch } from "@/utils";
 
-import { type TrackerList, type ErrorResponse, FetchTrackers, APIError, ErrorSchema, TrackerPost, Tracker} from "@/types";
+import { type TrackerList, type FormPMeth, TrackerPost, Tracker, ErrorSchema} from "@/types";
 
-const customBaseQuery: BaseQueryFn<
+export const customBaseQuery: BaseQueryFn<
   {url: string, method: "get"|"post"|"delete"|"patch", body?: any},
   unknown,
   unknown
@@ -88,7 +88,33 @@ export const trackersApi = createApi({
         }
       },
     }),
+    fetchExchanges: builder.query<{exchanges: string[]} & {message: string}, void>({
+      query: () => ({
+        url: "/trackers/options/exchanges",
+        method: "get",
+      }),
+    }),
+    fetchCurrencies: builder.query<{options: string[]} & {message: string}, string>({
+      query: (exchange) => ({
+        url: `/trackers/options/currencies?exchange=${exchange}`,
+        method: "get",
+      }),
+    }),
+    fetchMethods: builder.query<{options: FormPMeth[]} & {message: string}, [string, string]>({
+     query: ([exchange, currency]) => ({
+      url: `/trackers/options/methods?exchange=${exchange}&currency=${currency}`,
+      method: "get",
+      }),
+    }),
   })
 });
 
-export const { useGetTrackersQuery, useGetTrackerByIdQuery, useCreateTrackerMutation, useDeleteTrackerMutation, useUpdateTrackerMutation } = trackersApi;
+export const {
+  useGetTrackersQuery,
+  useGetTrackerByIdQuery,
+  useCreateTrackerMutation, 
+  useDeleteTrackerMutation,
+  useUpdateTrackerMutation,
+  useFetchExchangesQuery,
+  useFetchCurrenciesQuery,
+  useFetchMethodsQuery} = trackersApi;
