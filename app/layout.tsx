@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import "./globals.css";
 import Provider from './StoreProvider';
 import ToastProvider from './ToastProvider';
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <Provider>
     <html lang="en">
+      <UserProvider>
       <body
         className={`${roboto.className} bg-orange-50`}
         id="root" 
@@ -37,6 +39,7 @@ export default function RootLayout({
           <Footer/>
         </div>
       </body>
+      </UserProvider>
     </html>
     </Provider>
   );

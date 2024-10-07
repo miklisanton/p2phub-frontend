@@ -14,12 +14,23 @@ export const publicFetch = axios.create({
 });
 
 export const privateFetch = axios.create({
-  baseURL: backendUrl + '/api/v1/private',
+  baseURL: '/api/proxy/api/v1/private',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+export const fetchWithAuth = (token: string) => {
+  return axios.create({
+    baseURL: backendUrl + '/api/v1/private',
+    withCredentials: true,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+}
 
 export const displayErrors = (error:any) => {
       for (const [key, value] of Object.entries(error.response.data.errors)) {
