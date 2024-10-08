@@ -3,15 +3,9 @@ services:
     working_dir: /app
     build:
       context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./:/app
-      - /app/node_modules
+      dockerfile: production.Dockerfile
     ports:
       - 3000:3000
-    environment:
-      NODE_ENV: development
-    command: npm run dev
     networks:
       - app-network
 networks:
