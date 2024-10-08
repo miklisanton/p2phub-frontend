@@ -1,7 +1,6 @@
 import { createApi, BaseQueryFn } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
-import { fetchWithAuth, privateFetch } from "@/utils";
-import { getAccessToken } from "@auth0/nextjs-auth0"
+import {  privateFetch } from "@/utils";
 
 import { type TrackerList, type FormPMeth, TrackerPost, Tracker, ErrorSchema} from "@/types";
 

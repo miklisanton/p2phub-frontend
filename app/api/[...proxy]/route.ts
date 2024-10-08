@@ -1,6 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0/edge';
 import { NextRequest, NextResponse } from 'next/server';
-import { Duplex } from 'stream';
 
 const handler = async (request: NextRequest) => {
   let token: string | null = null;
@@ -11,11 +10,11 @@ const handler = async (request: NextRequest) => {
       throw new Error('Access token not found.');
     }
     token = accessToken;
-  } catch (e: any) {
+  } catch (e) {
     console.error('Cannot get access token.');
     console.log(e);
-    return new Response(e, {
-      status: 500,
+    return new Response("Unauthorized", {
+      status: 401,
     });
   }
 
@@ -56,10 +55,10 @@ const handler = async (request: NextRequest) => {
       statusText: response.statusText,
       headers: response.headers,
     });
-  } catch (e: any) {
+  } catch (e) {
     console.error(`Received 500 Internal Server Error from backend API.`);
     console.log(e);
-    return new Response(e, {
+    return new Response("Internal error", {
       status: 500,
     });
   }

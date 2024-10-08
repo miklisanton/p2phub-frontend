@@ -1,6 +1,6 @@
 'use client';
 import {MultiSelect} from './MultiSelect';
-import { Bars, Circles } from 'react-loader-spinner';
+import { Bars } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import { useEffect, useState, useRef} from 'react';
 import { APIError } from '@/types';

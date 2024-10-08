@@ -1,10 +1,8 @@
 'use client'
 
-import { useAppSelector } from '@/lib/hooks'
 import { NavLink } from './Navlink'
 import { useState } from 'react'
 import { links } from '../data'
-import { privateFetch } from '../utils'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import {
   Dialog,
