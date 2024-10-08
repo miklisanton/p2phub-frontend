@@ -7,12 +7,16 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    colors: {
-      "tangerine": "#DD4124",
-      "coffee": "#4B342F",
-      "lime": "#DFEF87",
-      "olive": "726A4E",
+    extend: {
+      colors: {
+        "tangerine": "#DD4124",
+        "coffee": "#4B342F",
+        "lime": "#DFEF87",
+        "olive": "#726A4E",
+        "pepper": "#A1947D",
+        "avocado": "#9B892F",
 
+      },
     },
   },
   plugins: [],

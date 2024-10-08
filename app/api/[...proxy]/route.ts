@@ -1,5 +1,6 @@
 import { getAccessToken } from '@auth0/nextjs-auth0/edge';
 import { NextRequest, NextResponse } from 'next/server';
+import { Duplex } from 'stream';
 
 const handler = async (request: NextRequest) => {
   let token: string | null = null;
@@ -29,21 +30,21 @@ const handler = async (request: NextRequest) => {
     // Construct the new URL using string format
     const newURLString = `${basePath}${newPath}${queryString}${hash}`;
     const newURL = new URL(newURLString);
-    console.log(`Proxying request to ${newURL.toString()}`);
 
     const headers = new Headers(request.headers);
+    headers.delete('content-length');
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
-      console.log(token);
     }
 
     // Next.js adapted the fetch implementation that forces caching on a success response. We don't want that.
+    const body = request.body ? await request.text() : undefined;
     const response = await fetch(newURL.toString(), 
       {
         method: request.method,
+        body: body,
         headers: headers,
-        body: request.body,
-      }
+      },
     );
 
     if (response.status === 401) {

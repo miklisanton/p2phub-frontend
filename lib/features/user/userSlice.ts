@@ -5,6 +5,7 @@ export const fetchUserThunk = createAsyncThunk(
   "user/fetchUser",
   async () => {
     const response = await fetchUser();
+    console.log(response);
     return response;
   }
 );

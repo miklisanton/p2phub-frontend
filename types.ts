@@ -92,6 +92,7 @@ export const fetchUser = async (): Promise<User | ErrorResponse> => {
   console.log('fetchUser')
   try {
     const response = await privateFetch.get('/profile');
+    console.log(response)
 
     // Attempt to parse the response data as a User
     const userData = UserSchema.parse(response.data);

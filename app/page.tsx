@@ -27,17 +27,17 @@ export default function Page() {
             className="object-scale-down lg:max-h-[85%]"
             src={iphoneImage}
             alt="creative"
-            style={{WebkitFilter: 'drop-shadow(3px 3px 3px #888)', filter: 'drop-shadow(3px 3px 3px #888)'}}
+            style={{WebkitFilter: 'drop-shadow(3px 3px 3px #111)', filter: 'drop-shadow(3px 3px 3px #111)'}}
             quality={100}/>
         </div>
         <div className={`${robotoCondensed.className} hidden lg:flex container `}>
-          <ul className="text-right self-center w-full text-orange-800 capitalize">
+          <ul className="text-right self-center w-full text-lime capitalize">
             <li>Create account</li>
             <li>Get 3 days free trial</li>
           </ul>
           <Image 
             className="self-start mr-2 h-1/2 rotate-[-10deg]"
-            style={{filter: 'invert(21%) sepia(20%) saturate(7000%) hue-rotate(357deg) brightness(98%) contrast(89%)'}}
+            style={{filter: 'invert(95%) sepia(4%) saturate(3266%) hue-rotate(14deg) brightness(92%) contrast(109%)'}}
             alt="arrow"
             src={arrowImage}/>
         </div>
