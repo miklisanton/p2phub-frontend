@@ -1,12 +1,13 @@
 'use client';
 import {MultiSelect} from './MultiSelect';
-import { Bars } from 'react-loader-spinner';
+import { Bars, Circles } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import { useEffect, useState, useRef} from 'react';
 import { APIError } from '@/types';
 import { useCreateTrackerMutation, useFetchExchangesQuery, useFetchCurrenciesQuery, useFetchMethodsQuery } from '@/lib/features/trackers/trackersApi';
 import { useAppSelector, useAppDispatch } from '@/lib/hooks';
 import { setExchange, setCurrency} from '@/lib/features/trackers/formSlice';   
+import SmallSpinner from './SmallSpinner';
 
 
 const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
@@ -39,10 +40,11 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
 
   const dispatch = useAppDispatch();
   const { exchange, currency, methods} = useAppSelector((state) => state.form);
-  const {data: availableExchanges, isLoading:isExchangeLoading} = useFetchExchangesQuery();
-  const {data: availableCurrencies, isLoading:isCurrenciesLoading} = useFetchCurrenciesQuery(exchange);
-  const {data: availableMethods, isLoading:isMethodsLoading} = useFetchMethodsQuery([exchange, currency]);
-  
+  const {data: availableExchanges, isFetching:isExchangeLoading} = useFetchExchangesQuery();
+  const {data: availableCurrencies, isFetching:isCurrenciesLoading} = useFetchCurrenciesQuery(exchange);
+  const {data: availableMethods, isFetching:isMethodsLoading} = useFetchMethodsQuery([exchange, currency]);
+
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
@@ -65,7 +67,7 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
           {/* Exchange */}
           {isExchangeLoading
             ?
-              <div>Loading...</div>
+              <SmallSpinner />
             :
             <div className="w-1/2 pr-2">
               <label htmlFor="exchange" className="text-gray-700 font-bold">Exchange</label>
@@ -107,7 +109,7 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
           {/* Payment methods */}
           {isMethodsLoading || !availableMethods?.options
             ?
-              <div>Loading...</div>
+              <SmallSpinner />
             :
               <div className="pb-4 md:pb-0 md:max-w-32 w-full lg:max-w-36">
                 <label htmlFor="payment" className="text-gray-700 font-bold">Payment</label>
@@ -117,7 +119,7 @@ const TrackerForm = ({isTelegramConnected}:{isTelegramConnected: boolean}) => {
           {/* Currency */}
           {isCurrenciesLoading
             ?
-              <div>Loading...</div>
+              <SmallSpinner />
             :
               <div className="md:max-w-22 lg:max-w-24">
                 <label htmlFor="currency" className="text-gray-700 font-bold">Currency</label>

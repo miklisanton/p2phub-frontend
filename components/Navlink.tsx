@@ -8,7 +8,7 @@ export const NavLink = ({href, children }: {href:string, children:React.ReactNod
 
   return (
     <Link href={href} legacyBehavior>
-      <a className={`flex justify-center text-sm font-semibold leading-6 p-0 mr-2 ${isActive ? 'text-orange-800' : 'text-gray-900'}`}>
+      <a className={`flex justify-center text-md font-semibold leading-6 p-0 mr-2 ${isActive ? 'text-lime' : 'text-white'}`}>
         {children}
       </a>
     </Link>

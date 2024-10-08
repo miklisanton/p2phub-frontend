@@ -24,14 +24,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Provider>
     <html lang="en">
       <UserProvider>
+      <Provider>
       <body
-        className={`${roboto.className} bg-orange-50`}
+        className={`${roboto.className} bg-gray-900`}
         id="root" 
       >
-        <div className="flex flex-col h-screen text-gray-900">
+        <div className="flex flex-col h-screen text-white">
           <Header/>
           <ToastProvider>
             {children}
@@ -39,8 +39,8 @@ export default function RootLayout({
           <Footer/>
         </div>
       </body>
+      </Provider>
       </UserProvider>
     </html>
-    </Provider>
   );
 }

@@ -47,7 +47,7 @@ export const MultiSelect = ({options}: {options: FormPMeth[]}) => {
       </div>
       {isOpen && (
         <div  
-        className="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10 break-words max-h-96 overflow-y-auto">
+        className="absolute mt-1 w-full text-black bg-white border border-gray-300 rounded-md shadow-lg z-10 break-words max-h-48 overflow-y-auto">
           {options.map((option) => (
             <label
               key={option.id}

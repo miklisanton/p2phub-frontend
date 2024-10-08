@@ -2,15 +2,17 @@
 import Tracker from './SingleTracker';
 import TrackerForm from './TrackerForm';
 import { useAppSelector } from '../lib/hooks';
-import React from 'react';
+import { useState } from 'react';
 import { useGetTrackersQuery } from '@/lib/features/trackers/trackersApi';
 import LoadingPage from './Loading';
 
 export  function Trackers() {
-  const user = useAppSelector((state) => state.user.user);
   // Check if telegram is connected
-  const isTelegramConnecected = user?.user.telegram ? true : false;
-  const [page, setPage] = React.useState(1);
+  const user = useAppSelector((state) => state.user.user);  // Selector for user data
+  const isTelegramConnecected = user?.user.telegram !== null;
+
+  const [page, setPage] = useState(1);
+
   const { data, isLoading, isError } = useGetTrackersQuery(page);
   if (isLoading) {
     return ( 
@@ -19,16 +21,26 @@ export  function Trackers() {
   }
 
   if (!user) {
-    return <h1 className="capitalize text-5xl font-bold text-center mt-6 mb-2 text-orange-800">Please login to view your trackers</h1>
+    return (
+      <div className="flex items-center justify-center">
+        <h1 className="capitalize text-5xl font-bold text-center text-lime my-12">Please login to view your trackers</h1>
+      </div>
+    )
   }
  
   if (isError) {
-    return <h1 className="capitalize text-5xl font-bold text-center mt-6 mb-2 text-orange-800">Error fetching trackers</h1>
+    return (
+      <div className="flex items-center justify-center flex-grow h-1/2">
+        <h1 className="capitalize text-5xl font-bold text-center mt-6 mb-2 text-orange-800">Error fetching trackers</h1>
+      </div>
+    )
   }
 
   return (
     <>
-    <h1 className="capitalize text-5xl font-bold text-center mt-6 mb-2 text-orange-800">My trackers</h1>
+    <hr className="mt-8 my-4 border-lime"/>
+    <h1 className="capitalize text-5xl font-bold text-center my-2 text-white">My trackers</h1>
+    <hr className="my-4 border-lime"/>
     <div className="container mx-auto grid  md:max-w-5xl md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-4 p-4">
       <TrackerForm isTelegramConnected={isTelegramConnecected}/>
       {data?.trackers.map((tracker) => {
@@ -36,7 +48,7 @@ export  function Trackers() {
       })
       }
     </div>
-    <div className="flex justify-center items-center text-orange-800 my-6 text-xl font-black">
+    <div className="flex justify-center items-center text-lime my-6 text-xl font-black">
       <button type="button"
         className="mr-4"
         onClick={()=> setPage((old) => Math.max(old - 1, 1))}
