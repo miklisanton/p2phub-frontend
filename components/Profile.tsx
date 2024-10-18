@@ -3,17 +3,28 @@
 import { privateFetch } from '../utils';
 import { useAppSelector } from '@/lib/hooks';
 import LoadingPage from './Loading';
+//import { PaymentForm } from './PaymentForm';
 
 export const Profile = () => {
   const handleTelegramConnect = () => {
+    // Create a new window immediately
+    const newWindow = window.open('', '_blank');
+    
     // Get telegram connection link
-    privateFetch.post('/telegram/connect').then((res) => {
-      console.log(res);
-      window.open("https://" + res.data.link, "_blank");
-    }
-    ).catch((error) => {
-      console.error(error);
-    })
+    privateFetch.post('/telegram/connect')
+      .then((res) => {
+        // Set the new window's location to the fetched link
+        if (newWindow) {
+          newWindow.location.href = "https://" + res.data.link;
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        // Close the new window if an error occurs
+        if (newWindow) {
+          newWindow.close();
+        }
+      });
   }
 
   
@@ -75,6 +86,7 @@ export const Profile = () => {
               className="text-gray-800 hover:text-black border border-lime hover:bg-lime focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
           Renew Subscription
           </button>
+          {/*<PaymentForm email={user.user.email}/>*/}
         </div>
       </div>
     </div>
