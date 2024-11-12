@@ -3,7 +3,6 @@
 import { privateFetch } from '../utils';
 import { useAppSelector } from '@/lib/hooks';
 import LoadingPage from './Loading';
-//import { PaymentForm } from './PaymentForm';
 
 export const Profile = () => {
   const handleTelegramConnect = () => {
@@ -26,6 +25,26 @@ export const Profile = () => {
         }
       });
   }
+
+  const handleSubscribe = () => {
+    const newWindow = window.open('', '_blank');
+
+    // Get payment link
+    privateFetch.post('/subscriptions')
+      .then((res) => {
+        // Set the new window's location to the fetched link
+        console.log(res);
+        if (newWindow) {
+          newWindow.location.href = res.data.invoice.url;
+        }
+      }).catch((error) => {
+        console.error(error);
+        // Close the new window if an error occurs
+        if (newWindow) {
+          newWindow.close();
+        }
+      });
+  } 
 
   
   const user = useAppSelector((state) => state.user.user);  // Selector for user data
@@ -83,10 +102,10 @@ export const Profile = () => {
           <h2 className="font-semibold text-gray-900 text-xl mb-1">Subscription:</h2>
           <h2 className="pl-1 font-semibold text-gray-600 mb-2">Expires 12.11.2024</h2>
           <button type="button"
+              onClick={handleSubscribe}
               className="text-gray-800 hover:text-black border border-lime hover:bg-lime focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
           Renew Subscription
           </button>
-          {/*<PaymentForm email={user.user.email}/>*/}
         </div>
       </div>
     </div>
